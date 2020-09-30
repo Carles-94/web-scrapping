@@ -4,8 +4,6 @@ import pandas as pd
 import time
 
 def getContentFromPage(driver):
-    #Wait the page's loading
-    time.sleep(5)
     #Get the content
     content = driver.page_source
     soup = BeautifulSoup(content, "html.parser")
@@ -32,11 +30,15 @@ def getContentFromPage(driver):
         td = tr.find_all("td")
         content = (td[1].text).replace(",",".")
         featureList[td[0].text] = [content]
-
-    #to navigate back
-    #driver.navigate().back();
-
     return featureList
+
+def clickOnEtf(driver, row):
+    buttonTd = row.find_all("td")[0]
+    button = buttonTd.find_all("a")[0]
+    element = driver.find_element_by_link_text(button.text)
+    element.click()
+    #Wait the page's loading
+    time.sleep(1)
 
 #init chrome
 driver = webdriver.Chrome("/Users/tutu/Desktop/python/web-scrapping/chromedriver")
@@ -53,17 +55,16 @@ soup = BeautifulSoup(content, "html.parser")
 #Get the main table
 searchTable = soup.find_all("tbody")[0]
 
-#Get the first row
-firstRow = searchTable.find_all("tr")[0]
-
-#Click the button to the page the details
-buttonTd = firstRow.find_all("td")[0]
-button = buttonTd.find_all("a")[0]
-element = driver.find_element_by_link_text(button.text)
-element.click()
-
-#Get the content
-featureList = getContentFromPage(driver)
+#Iterate through all the rows
+for row in searchTable.find_all("tr"):
+    #Click the button to the page the details
+    clickOnEtf(driver, row)
+    #Get the content
+    featureList = getContentFromPage(driver)
+    #Go back to the table page
+    driver.back()
+    #Wait the page's loading
+    time.sleep(1)
 
 driver.quit()
 

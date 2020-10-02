@@ -2,9 +2,6 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import pandas as pd
 import time
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
 
 def getContentFromPage(driver, data):
     #Get the content
@@ -60,11 +57,7 @@ driver.find_element_by_name("agree").click()
 
 data = {}
 
-for i in range(2):
-    #Test
-    button= driver.find_element_by_xpath("//*[@id=\"scr-res-table\"]/div[2]/button[3]")
-    driver.execute_script("arguments[0].click();", button)
-    time.sleep(5)
+while True :
     #Get the content
     content = driver.page_source
     soup = BeautifulSoup(content, "html.parser")
@@ -80,7 +73,12 @@ for i in range(2):
         driver.back()
         #Wait the page's loading
         time.sleep(2)
-    driver.find_element_by_link_text("Next").click()
+    try:
+        for span in driver.find_elements_by_tag_name("span"):
+            if (span.text == "Next"):
+                driver.execute_script("arguments[0].click();", span)
+    except:
+        break
     time.sleep(2)
 
 driver.quit()

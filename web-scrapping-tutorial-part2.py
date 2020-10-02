@@ -2,6 +2,8 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import pandas as pd
 import time
+from collections import defaultdict
+
 
 def getContentFromPage(driver, data):
     #Get the content
@@ -21,23 +23,13 @@ def getContentFromPage(driver, data):
     rightTable = allTable[1].find_all("tr")
     trData = leftTable + rightTable
 
-    isFirstPass = not bool(data)
-    if isFirstPass:
-        data["name"] = [name.strip()]
-        data["ticker"] = [ticker]
+    data["name"].append(name.strip())
+    data["ticker"].append(ticker)
 
-        for tr in trData:
-            td = tr.find_all("td")
-            content = (td[1].text).replace(",",".")
-            data[td[0].text] = [content]
-    else:
-        data["name"].append(name.strip())
-        data["ticker"].append(ticker)
-
-        for tr in trData:
-            td = tr.find_all("td")
-            content = (td[1].text).replace(",",".")
-            data[td[0].text].append(content)
+    for tr in trData:
+        td = tr.find_all("td")
+        content = (td[1].text).replace(",",".")
+        data[td[0].text].append(content)
     return data
 
 def clickOnEtf(driver, row):
@@ -55,7 +47,7 @@ driver.get("https://finance.yahoo.com/screener/unsaved/7a33d557-ff00-4cc7-a821-6
 #Click on the popup
 driver.find_element_by_name("agree").click()
 
-data = {}
+data = defaultdict(list)
 
 while True :
     #Get the content

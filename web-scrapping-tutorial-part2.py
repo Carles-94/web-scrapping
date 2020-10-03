@@ -38,6 +38,11 @@ def clickOnEtf(driver, row):
     driver.find_element_by_link_text(button.text).click()
     #Wait the page's loading
     time.sleep(2)
+    
+def clickNext(driver):
+    for span in driver.find_elements_by_tag_name("span"):
+        if (span.text == "Next"):
+            driver.execute_script("arguments[0].click();", span)
 
 #init chrome
 driver = webdriver.Chrome("/Users/tutu/Desktop/python/web-scrapping/chromedriver")
@@ -47,6 +52,7 @@ driver.get("https://finance.yahoo.com/screener/unsaved/7a33d557-ff00-4cc7-a821-6
 #Click on the popup
 driver.find_element_by_name("agree").click()
 
+#Objet to save the data scrapped
 data = defaultdict(list)
 
 while True :
@@ -61,14 +67,12 @@ while True :
         clickOnEtf(driver, row)
         #Get the content
         data = getContentFromPage(driver, data)
-        #Go back to the table page
+        #Go back to the main page
         driver.back()
         #Wait the page's loading
         time.sleep(2)
     try:
-        for span in driver.find_elements_by_tag_name("span"):
-            if (span.text == "Next"):
-                driver.execute_script("arguments[0].click();", span)
+        clickNext(driver)
     except:
         break
     time.sleep(2)

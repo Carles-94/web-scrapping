@@ -11,7 +11,7 @@ driver.get("https://finance.yahoo.com/quote/RDVY?p=RDVY")
 
 #Click on the popup
 element = driver.find_element_by_name("agree")
-ActionChains(driver).click(element).perform()
+element.click()
 
 #Get the content
 content = driver.page_source

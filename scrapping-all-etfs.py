@@ -47,13 +47,15 @@ def clickNext(driver):
 #init chrome
 driver = webdriver.Chrome("/Users/tutu/Desktop/python/web-scrapping/chromedriver")
 #go to the web site with the search which we will scrap
-driver.get("https://finance.yahoo.com/screener/unsaved/7a33d557-ff00-4cc7-a821-6c571565efe2")
+driver.get("https://finance.yahoo.com/screener/etf/new")
 
 #Click on the popup
 driver.find_element_by_name("agree").click()
 
 #Objet to save the data scrapped
 data = defaultdict(list)
+
+#TODO do the search due to the recent changes in Yahoo finances
 
 while True :
     #Get the content

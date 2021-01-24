@@ -45,7 +45,8 @@ def clickNext(driver):
             driver.execute_script("arguments[0].click();", span)
 
 #init chrome
-driver = webdriver.Chrome("/Users/tutu/Desktop/python/web-scrapping/chromedriver")
+#TODO move this path to an external file
+driver = webdriver.Chrome("/Users/tutu/Desktop/programming/python/web-scrapping/chromedriver")
 #go to the web site with the search which we will scrap
 driver.get("https://finance.yahoo.com/screener/etf/new")
 
@@ -55,7 +56,14 @@ driver.find_element_by_name("agree").click()
 #Objet to save the data scrapped
 data = defaultdict(list)
 
-#TODO do the search due to the recent changes in Yahoo finances
+#search etfs
+driver.find_element_by_xpath("//button[@title='★★★★★']").click()
+time.sleep(2)
+driver.find_element_by_xpath("//button[@title='★★★★★']").click()
+time.sleep(2)
+driver.find_element_by_xpath("//button[@data-test='find-stock']").click()
+time.sleep(2)
+
 
 while True :
     #Get the content
@@ -70,6 +78,7 @@ while True :
         #Get the content
         data = getContentFromPage(driver, data)
         #Go back to the main page
+        #This doesnt work TODO fix it
         driver.back()
         #Wait the page's loading
         time.sleep(2)
